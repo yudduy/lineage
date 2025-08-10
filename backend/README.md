@@ -2,7 +2,7 @@
 
 Minimal demo API for building citation networks via OpenAlex and persisting to Neo4j.
 
-## Quick Start - Demo Mode
+## ⚡ Quick Start
 
 ### Prerequisites
 - Python 3.11+
@@ -32,10 +32,10 @@ OPENALEX_EMAIL=your.email@example.com  # Required for polite pool (100k req/day)
 
 ```bash
 # Start Neo4j only (minimal)
-docker-compose -f docker-compose.dev.yml up -d neo4j
+docker-compose up -d neo4j
 
 # Or with Redis for caching
-docker-compose -f docker-compose.dev.yml up -d neo4j redis
+docker-compose up -d neo4j redis
 ```
 
 ### 3. Install Dependencies
