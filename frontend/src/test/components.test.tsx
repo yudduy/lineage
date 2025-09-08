@@ -24,7 +24,7 @@ import DashboardPage from '../pages/DashboardPage';
 import NetworkView from '../components/visualization/NetworkView';
 import CitationFlowVisualizer from '../components/visualization/CitationFlowVisualizer';
 import PaperDetailsPanel from '../components/panels/PaperDetailsPanel';
-import AdvancedSearchModal from '../components/modals/AdvancedSearchModal';
+import SearchModal from '../components/modals/SearchModal';
 import BibTeXUploadModal from '../components/modals/BibTeXUploadModal';
 import ExportModal from '../components/modals/ExportModal';
 import RealtimeStatusIndicator from '../components/ui/RealtimeStatusIndicator';
@@ -302,11 +302,11 @@ describe('Core Component Functionality', () => {
     });
   });
 
-  describe('AdvancedSearchModal Component', () => {
+  describe('SearchModal Component', () => {
     it('renders advanced search form', async () => {
       render(
         <TestWrapper>
-          <AdvancedSearchModal isOpen={true} onClose={() => {}} />
+          <SearchModal isOpen={true} onClose={() => {}} />
         </TestWrapper>
       );
 
@@ -323,7 +323,7 @@ describe('Core Component Functionality', () => {
       
       render(
         <TestWrapper>
-          <AdvancedSearchModal isOpen={true} onClose={() => {}} onSearch={onSearchMock} />
+          <SearchModal isOpen={true} onClose={() => {}} onSearch={onSearchMock} />
         </TestWrapper>
       );
 
@@ -850,7 +850,7 @@ describe('Error Handling and Edge Cases', () => {
     
     render(
       <TestWrapper>
-        <AdvancedSearchModal isOpen={true} onClose={() => {}} />
+        <SearchModal isOpen={true} onClose={() => {}} />
       </TestWrapper>
     );
 

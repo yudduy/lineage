@@ -28,7 +28,7 @@ Key settings:
 ```bash
 # From project root
 docker-compose up -d
-docker-compose exec backend python app/scripts/initialize_graph_system.py
+docker-compose exec backend python app/scripts/setup_database.py
 ```
 
 ### 3. Or run locally
@@ -39,7 +39,7 @@ docker-compose -f docker-compose.dev.yml up neo4j redis -d
 
 # Install and run backend
 pip install -r requirements.txt
-python app/scripts/initialize_graph_system.py
+python app/scripts/setup_database.py
 python main.py
 ```
 

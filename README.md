@@ -73,7 +73,7 @@ cp backend/env.example .env
 docker-compose up -d
 
 # Initialize the database (one time)
-docker-compose exec backend python app/scripts/initialize_graph_system.py
+docker-compose exec backend python app/scripts/setup_database.py
 ```
 
 **Option B: Local development**

@@ -44,7 +44,7 @@ const searchSchema = z.object({
 
 type SearchFormData = z.infer<typeof searchSchema>;
 
-interface AdvancedSearchModalProps {
+interface SearchModalProps {
   isOpen: boolean;
   onClose: () => void;
 }
@@ -61,7 +61,7 @@ const mockSubjects = [
   'Mathematics', 'Engineering', 'Psychology', 'Economics', 'Neuroscience'
 ];
 
-const AdvancedSearchModal: React.FC<AdvancedSearchModalProps> = ({ isOpen, onClose }) => {
+const SearchModal: React.FC<SearchModalProps> = ({ isOpen, onClose }) => {
   const [isSearching, setIsSearching] = useState(false);
   const [searchResults, setSearchResults] = useState<any[]>([]);
   const [showFilters, setShowFilters] = useState(false);
@@ -560,4 +560,4 @@ const AdvancedSearchModal: React.FC<AdvancedSearchModalProps> = ({ isOpen, onClo
   );
 };
 
-export default AdvancedSearchModal;
+export default SearchModal;

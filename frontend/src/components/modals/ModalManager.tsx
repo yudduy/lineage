@@ -1,7 +1,7 @@
 import React from 'react';
 import { useUiStore } from '@store/index';
 import DOIInputModal from './DOIInputModal';
-import AdvancedSearchModal from './AdvancedSearchModal';
+import SearchModal from './SearchModal';
 import BibTeXUploadModal from './BibTeXUploadModal';
 import ExportModal from './ExportModal';
 // Import future modals as they are created
@@ -29,7 +29,7 @@ const ModalManager: React.FC = () => {
       />
 
       {/* Advanced Search Modal */}
-      <AdvancedSearchModal
+      <SearchModal
         isOpen={modals.titleSearch}
         onClose={() => closeModal('titleSearch')}
       />

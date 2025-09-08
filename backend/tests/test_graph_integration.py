@@ -10,7 +10,7 @@ import uuid
 from typing import Dict, List, Any
 from datetime import datetime, timedelta
 
-from app.db.neo4j_advanced import AdvancedNeo4jManager, GraphProjection
+from app.db.neo4j import Neo4jManager
 from app.services.graph_operations import (
     GraphCRUDOperations,
     PaperNode,
@@ -27,7 +27,7 @@ from app.services.query_optimization import QueryOptimizer
 @pytest.fixture
 async def neo4j_manager():
     """Create Neo4j manager for testing."""
-    manager = AdvancedNeo4jManager()
+    manager = Neo4jManager()
     await manager.connect()
     
     # Clean up any existing test data
@@ -277,11 +277,14 @@ class TestCRUDOperations:
 # ==================== GRAPH ALGORITHMS TESTS ====================
 
 @pytest.mark.asyncio
+# NOTE: Advanced graph algorithm tests commented out since we removed advanced features
+# These would require Neo4j GDS and GraphProjection functionality
+"""
 class TestGraphAlgorithms:
-    """Test graph algorithms functionality."""
+    '''Test graph algorithms functionality.'''
     
     async def test_graph_projection_creation(self, neo4j_manager):
-        """Test creating and managing graph projections."""
+        '''Test creating and managing graph projections.'''
         projection = GraphProjection(
             name="test_projection",
             node_labels=["Paper"],
@@ -695,7 +698,7 @@ class TestIntegration:
             
         finally:
             await neo4j_manager.drop_graph_projection("workflow_analysis")
-
+"""
 
 # ==================== UTILITY FUNCTIONS ====================
 

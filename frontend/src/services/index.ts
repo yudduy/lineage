@@ -1,10 +1,7 @@
-// Export all services
 export { api, apiClient, uploadFile, downloadFile, ApiError, handleApiError, createCancellableRequest, queueRequest } from './api';
 export { PaperService } from './paperService';
 export { AuthService } from './authService';
-export { ZoteroService } from './zoteroService';
 
-// Additional service utilities
 import { api } from './api';
 
 export class HealthService {

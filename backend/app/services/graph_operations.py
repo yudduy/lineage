@@ -10,7 +10,7 @@ from datetime import datetime
 from dataclasses import dataclass, asdict
 from enum import Enum
 
-from ..db.neo4j_advanced import AdvancedNeo4jManager, GraphProjection
+# Removed unused advanced imports
 from ..utils.logger import get_logger
 
 logger = get_logger(__name__)
@@ -141,7 +141,7 @@ class VenueNode:
 class GraphCRUDOperations:
     """Comprehensive CRUD operations for the citation network graph."""
     
-    def __init__(self, neo4j_manager: AdvancedNeo4jManager):
+    def __init__(self, neo4j_manager):
         self.neo4j = neo4j_manager
     
     # ==================== PAPER OPERATIONS ====================

@@ -25,7 +25,7 @@ pip install -r requirements.txt
 docker-compose -f docker-compose.dev.yml up -d
 
 # Initialize graph database
-python app/scripts/initialize_graph_system.py
+python app/scripts/setup_database.py
 
 # Run FastAPI server (development mode)
 python main.py
