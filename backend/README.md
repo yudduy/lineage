@@ -23,15 +23,21 @@ Key settings:
 - `SECRET_KEY` - Random string for security  
 - `OPENALEX_EMAIL` - Your email (gets higher rate limits)
 
-### 2. Start databases
+### 2. Run with Docker (recommended)
 
 ```bash
-docker-compose -f docker-compose.secure.yml up -d
+# From project root
+docker-compose up -d
+docker-compose exec backend python app/scripts/initialize_graph_system.py
 ```
 
-### 3. Install and run
+### 3. Or run locally
 
 ```bash
+# Start databases only
+docker-compose -f docker-compose.dev.yml up neo4j redis -d
+
+# Install and run backend
 pip install -r requirements.txt
 python app/scripts/initialize_graph_system.py
 python main.py

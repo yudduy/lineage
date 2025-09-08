@@ -61,45 +61,43 @@ git clone https://github.com/your-org/citation-network-explorer.git
 cd citation-network-explorer
 ```
 
-### 2. Setup the backend
+### 2. Choose your setup method
+
+**Option A: Full Docker (Recommended)**
 ```bash
-cd backend/
+# Copy and edit environment config
+cp backend/env.example .env
+# Edit .env with your passwords
 
-# Install dependencies
-pip install -r requirements.txt
+# Run everything with Docker
+docker-compose up -d
 
-# Copy and edit config
-cp env.example .env
-# Edit .env with your database passwords
-
-# Start Neo4j and Redis
-docker-compose -f docker-compose.secure.yml up -d
-
-# Initialize the graph database
-python app/scripts/initialize_graph_system.py
-
-# Start the API server
-python main.py
+# Initialize the database (one time)
+docker-compose exec backend python app/scripts/initialize_graph_system.py
 ```
 
-API will be running at http://localhost:8000  
-Docs at http://localhost:8000/docs
-
-### 3. Setup the frontend
+**Option B: Local development**
 ```bash
-cd frontend/
+# Start just the databases
+docker-compose -f docker-compose.dev.yml up neo4j redis -d
 
-# Install dependencies
-npm install
-
-# Copy config
+# Run backend locally
+cd backend/
+pip install -r requirements.txt
 cp env.example .env
+python main.py
 
-# Start dev server
+# Run frontend locally (separate terminal)
+cd frontend/
+npm install
 npm run dev
 ```
 
-Frontend will be at http://localhost:3000
+**Access the app:**
+- Frontend: http://localhost:3000
+- API: http://localhost:8000
+- API Docs: http://localhost:8000/docs
+- Neo4j Browser: http://localhost:7474
 
 ## How to use it
 
