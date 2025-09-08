@@ -1,60 +1,25 @@
 # Citation Network Explorer - Frontend
 
-A modern React TypeScript frontend for exploring intellectual lineage through citation networks.
+React frontend for the citation network explorer. Shows interactive graphs of how papers cite each other.
 
-## Features
+## What's included
 
-- **Interactive Visualization**: Explore citation networks in 2D or 3D using React Force Graph
-- **Modern Architecture**: Built with React 18, TypeScript, and Vite for fast development
-- **State Management**: Zustand for predictable state management
-- **Responsive Design**: Mobile-first approach with Tailwind CSS
-- **Accessibility**: WCAG 2.2 compliant components
-- **Multiple Views**: Network, List, and Table views for different use cases
-- **Data Integration**: Support for CrossRef, Semantic Scholar, OpenAlex, and Zotero
-- **Export Options**: BibTeX, CSV, JSON, GraphML formats
-- **Real-time Updates**: WebSocket integration for live updates
+- Interactive network visualization (2D/3D graphs)
+- Paper search and management
+- Export to BibTeX, CSV, JSON
+- Built with React + TypeScript
 
-## Tech Stack
+## Setup
 
-- **Framework**: React 18 with TypeScript
-- **Build Tool**: Vite
-- **Styling**: Tailwind CSS
-- **State Management**: Zustand
-- **Data Fetching**: TanStack Query (React Query)
-- **Visualization**: React Force Graph (2D/3D)
-- **Testing**: Vitest + React Testing Library
-- **Linting**: ESLint + TypeScript ESLint
+You need Node.js 18+ and the backend running.
 
-## Prerequisites
+```bash
+npm install
+cp env.example .env
+npm run dev
+```
 
-- Node.js 18+ 
-- npm or yarn
-- Running FastAPI backend (see backend README)
-
-## Installation
-
-1. **Install dependencies:**
-   ```bash
-   npm install
-   ```
-
-2. **Set up environment variables:**
-   ```bash
-   cp .env.example .env
-   ```
-   
-   Edit `.env` with your configuration:
-   ```env
-   VITE_API_URL=http://localhost:8000/api/v1
-   VITE_WS_URL=ws://localhost:8000/ws
-   ```
-
-3. **Start development server:**
-   ```bash
-   npm run dev
-   ```
-
-   The app will be available at http://localhost:3000
+App will be at http://localhost:3000
 
 ## Development
 

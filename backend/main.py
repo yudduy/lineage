@@ -28,7 +28,7 @@ async def lifespan(app: FastAPI):
     Handles startup and shutdown events for the FastAPI application.
     """
     # Startup
-    logger.info("Starting Citation Network Explorer API - Minimal Demo")
+    logger.info("Starting Citation Network Explorer API")
     
     # Initialize database connections (Neo4j and optional Redis)
     await connection_pool.initialize()
@@ -61,9 +61,10 @@ def create_app() -> FastAPI:
     
     # Add security middleware
     if settings.is_production:
+        # Configure TrustedHostMiddleware with trusted hosts from settings
         app.add_middleware(
             TrustedHostMiddleware,
-            allowed_hosts=["*"]  # Configure with your actual domains
+            allowed_hosts=settings.trusted_hosts
         )
     
     # Add minimal middleware

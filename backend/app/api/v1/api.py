@@ -1,5 +1,5 @@
 """
-Main API v1 router - Minimal demo version with essential endpoints only.
+Main API router with core endpoints for citation network exploration.
 """
 
 from fastapi import APIRouter
@@ -14,7 +14,7 @@ from .endpoints import (
 # Create main API router
 api_router = APIRouter(prefix="/api/v1")
 
-# Include only essential endpoint routers for minimal demo
+# Core endpoints for the citation network explorer
 api_router.include_router(
     health.router,
     prefix="/health",

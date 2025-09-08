@@ -1,8 +1,8 @@
-# Citation Network Explorer - Backend (Minimal Demo)
+# Citation Network Explorer - Backend
 
-Minimal demo API for building citation networks via OpenAlex and persisting to Neo4j.
+FastAPI backend for building citation networks using OpenAlex data.
 
-## ⚡ Quick Start
+## Quick Start
 
 ### Prerequisites
 - Python 3.11+
@@ -10,48 +10,35 @@ Minimal demo API for building citation networks via OpenAlex and persisting to N
 - Neo4j (via Docker)
 - Redis (optional, via Docker)
 
-### 1. Environment Setup
+### 1. Setup environment
 
-Create a `.env` file with minimal configuration:
-
-```bash
-# Neo4j (required)
-NEO4J_URI=bolt://localhost:7687
-NEO4J_USER=neo4j
-NEO4J_PASSWORD=your_password
-NEO4J_DATABASE=neo4j
-
-# Redis (optional - for caching)
-REDIS_URL=redis://localhost:6379  # Leave empty to run without cache
-
-# OpenAlex API (important for polite pool)
-OPENALEX_EMAIL=your.email@example.com  # Required for polite pool (100k req/day)
-```
-
-### 2. Start Infrastructure
+Copy `env.example` to `.env` and edit:
 
 ```bash
-# Start Neo4j only (minimal)
-docker-compose up -d neo4j
-
-# Or with Redis for caching
-docker-compose up -d neo4j redis
+cp env.example .env
 ```
 
-### 3. Install Dependencies
+Key settings:
+- `NEO4J_PASSWORD` - Set a secure password
+- `SECRET_KEY` - Random string for security  
+- `OPENALEX_EMAIL` - Your email (gets higher rate limits)
+
+### 2. Start databases
+
+```bash
+docker-compose -f docker-compose.secure.yml up -d
+```
+
+### 3. Install and run
 
 ```bash
 pip install -r requirements.txt
-```
-
-### 4. Run the API Server
-
-```bash
+python app/scripts/initialize_graph_system.py
 python main.py
 ```
 
-API will be available at: http://localhost:8000
-API docs at: http://localhost:8000/docs
+API: http://localhost:8000  
+Docs: http://localhost:8000/docs
 
 ### 5. Test the Sync Network Builder
 

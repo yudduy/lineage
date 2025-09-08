@@ -10,13 +10,13 @@ from pydantic_settings import BaseSettings
 
 
 class Settings(BaseSettings):
-    """Main application settings - minimal demo version."""
+    """Main application settings - clean and secure version."""
     
     # Application settings
-    app_name: str = Field(default="Citation Network Explorer API - Minimal Demo", env="APP_NAME")
-    app_version: str = Field(default="1.0.0-demo", env="APP_VERSION")
+    app_name: str = Field(default="Citation Network Explorer API", env="APP_NAME")
+    app_version: str = Field(default="1.0.0", env="APP_VERSION")
     app_description: str = Field(
-        default="Minimal demo API for citation network building via OpenAlex",
+        default="Clean and secure API for citation network exploration via OpenAlex",
         env="APP_DESCRIPTION"
     )
     
@@ -29,7 +29,7 @@ class Settings(BaseSettings):
     # Neo4j settings (required)
     neo4j_uri: str = Field(default="bolt://localhost:7687", env="NEO4J_URI")
     neo4j_user: str = Field(default="neo4j", env="NEO4J_USER")
-    neo4j_password: str = Field(default="password", env="NEO4J_PASSWORD")
+    neo4j_password: str = Field(env="NEO4J_PASSWORD")
     neo4j_database: str = Field(default="neo4j", env="NEO4J_DATABASE")
     
     # Redis settings (optional - for caching)
@@ -45,10 +45,17 @@ class Settings(BaseSettings):
     max_depth: int = Field(default=3, env="MAX_DEPTH")
     max_nodes_per_level: int = Field(default=50, env="MAX_NODES_PER_LEVEL")
     
-    # CORS settings
+    # CORS settings - production should override these
     backend_cors_origins: list = Field(
-        default=["http://localhost:3000", "http://localhost:5173", "https://localhost:3000"],
+        default=["http://localhost:3000", "http://localhost:5173"],
         env="BACKEND_CORS_ORIGINS"
+    )
+    
+    # Security settings
+    secret_key: str = Field(env="SECRET_KEY")
+    trusted_hosts: list = Field(
+        default=["localhost", "127.0.0.1"],
+        env="TRUSTED_HOSTS"
     )
     
     # Rate limiting
@@ -60,6 +67,14 @@ class Settings(BaseSettings):
     
     @validator("backend_cors_origins", pre=True)
     def assemble_cors_origins(cls, v):
+        if isinstance(v, str) and not v.startswith("["):
+            return [i.strip() for i in v.split(",")]
+        elif isinstance(v, (list, str)):
+            return v
+        raise ValueError(v)
+    
+    @validator("trusted_hosts", pre=True)
+    def assemble_trusted_hosts(cls, v):
         if isinstance(v, str) and not v.startswith("["):
             return [i.strip() for i in v.split(",")]
         elif isinstance(v, (list, str)):
