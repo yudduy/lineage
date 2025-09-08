@@ -276,10 +276,10 @@ class TestCRUDOperations:
 
 # ==================== GRAPH ALGORITHMS TESTS ====================
 
-@pytest.mark.asyncio
 # NOTE: Advanced graph algorithm tests commented out since we removed advanced features
 # These would require Neo4j GDS and GraphProjection functionality
 """
+@pytest.mark.asyncio
 class TestGraphAlgorithms:
     '''Test graph algorithms functionality.'''
     

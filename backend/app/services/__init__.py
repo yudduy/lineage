@@ -3,7 +3,7 @@ Business logic services for the Citation Network Explorer API - Clean Demo.
 """
 
 from .health import HealthService
-from .graph_operations import GraphOperationsService
+from .graph_operations import GraphCRUDOperations as GraphOperationsService
 from .openalex import OpenAlexClient
 
 __all__ = [

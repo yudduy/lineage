@@ -8,18 +8,13 @@ import {
   Filter, 
   Plus, 
   X, 
-  Calendar,
-  User,
-  BookOpen,
-  Tag,
-  TrendingUp,
   Loader2,
   ChevronDown
 } from 'lucide-react';
 import toast from 'react-hot-toast';
 import Modal from './Modal';
 import { useUiStore, usePaperStore } from '@store/index';
-import { SearchFilters, PaperSearchRequest } from '@types/paper';
+import { PaperSearchRequest, Paper, Author } from '@types/paper';
 import { PaperService } from '@services/paperService';
 import Button from '@components/ui/Button';
 import Fuse from 'fuse.js';
@@ -30,7 +25,6 @@ const searchSchema = z.object({
   title: z.string().optional(),
   authors: z.array(z.string()).optional(),
   journal: z.string().optional(),
-  subjects: z.array(z.string()).optional(),
   yearFrom: z.number().min(1900).max(new Date().getFullYear()).optional(),
   yearTo: z.number().min(1900).max(new Date().getFullYear()).optional(),
   citationMin: z.number().min(0).optional(),
@@ -40,6 +34,14 @@ const searchSchema = z.object({
   sortBy: z.enum(['relevance', 'year', 'citations', 'title']).default('relevance'),
   sortOrder: z.enum(['asc', 'desc']).default('desc'),
   limit: z.number().min(10).max(1000).default(50),
+}).superRefine((data, ctx) => {
+  if (data.yearFrom !== undefined && data.yearTo !== undefined && data.yearTo < data.yearFrom) {
+    ctx.addIssue({
+      path: ['yearTo'],
+      message: 'yearTo must be greater than or equal to yearFrom',
+      code: z.ZodIssueCode.custom
+    });
+  }
 });
 
 type SearchFormData = z.infer<typeof searchSchema>;
@@ -56,17 +58,15 @@ const mockJournals = [
   'Nature Genetics', 'Nature Medicine', 'PLOS ONE'
 ];
 
-const mockSubjects = [
-  'Computer Science', 'Biology', 'Physics', 'Chemistry', 'Medicine',
-  'Mathematics', 'Engineering', 'Psychology', 'Economics', 'Neuroscience'
-];
 
 const SearchModal: React.FC<SearchModalProps> = ({ isOpen, onClose }) => {
   const [isSearching, setIsSearching] = useState(false);
-  const [searchResults, setSearchResults] = useState<any[]>([]);
+  const [searchResults, setSearchResults] = useState<Paper[]>([]);
   const [showFilters, setShowFilters] = useState(false);
-  const [authorSuggestions, setAuthorSuggestions] = useState<string[]>([]);
   const [journalSuggestions, setJournalSuggestions] = useState<string[]>([]);
+  
+  // Add ref for click-outside handling
+  const dropdownRef = useRef<HTMLDivElement>(null);
   
   const { addPapers } = usePaperStore();
   const { setLoading } = useUiStore();
@@ -75,11 +75,10 @@ const SearchModal: React.FC<SearchModalProps> = ({ isOpen, onClose }) => {
     register,
     control,
     handleSubmit,
-    formState: { errors, isSubmitting },
+    formState: { errors },
     reset,
     watch,
     setValue,
-    getValues,
   } = useForm<SearchFormData>({
     resolver: zodResolver(searchSchema),
     defaultValues: {
@@ -94,17 +93,10 @@ const SearchModal: React.FC<SearchModalProps> = ({ isOpen, onClose }) => {
     name: 'authors',
   });
 
-  const { fields: subjectFields, append: appendSubject, remove: removeSubject } = useFieldArray({
-    control,
-    name: 'subjects',
-  });
-
-  const watchQuery = watch('query');
   const watchJournal = watch('journal');
 
   // Initialize fuzzy search for suggestions
   const journalFuse = useRef(new Fuse(mockJournals, { threshold: 0.3 }));
-  const subjectFuse = useRef(new Fuse(mockSubjects, { threshold: 0.3 }));
 
   // Journal autocomplete
   useEffect(() => {
@@ -116,6 +108,20 @@ const SearchModal: React.FC<SearchModalProps> = ({ isOpen, onClose }) => {
     }
   }, [watchJournal]);
 
+  // Click-outside handling for journal suggestions
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
+        setJournalSuggestions([]);
+      }
+    };
+    
+    if (journalSuggestions.length > 0) {
+      document.addEventListener('mousedown', handleClickOutside);
+      return () => document.removeEventListener('mousedown', handleClickOutside);
+    }
+  }, [journalSuggestions]);
+
   const onSubmit = async (data: SearchFormData) => {
     setIsSearching(true);
     setLoading('search', true);
@@ -125,7 +131,7 @@ const SearchModal: React.FC<SearchModalProps> = ({ isOpen, onClose }) => {
       const searchRequest: PaperSearchRequest = {
         query: data.query,
         title: data.title,
-        authors: data.authors?.join(', '),
+        authors: data.authors && data.authors.length > 0 ? JSON.stringify(data.authors) : undefined,
         journal: data.journal,
         publication_year_min: data.yearFrom,
         publication_year_max: data.yearTo,
@@ -155,7 +161,7 @@ const SearchModal: React.FC<SearchModalProps> = ({ isOpen, onClose }) => {
     }
   };
 
-  const handleAddSelectedPapers = useCallback((papers: any[]) => {
+  const handleAddSelectedPapers = useCallback((papers: Paper[]) => {
     addPapers(papers);
     toast.success(`Added ${papers.length} papers to your network`);
     onClose();
@@ -281,7 +287,9 @@ const SearchModal: React.FC<SearchModalProps> = ({ isOpen, onClose }) => {
                                focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                     />
                     {journalSuggestions.length > 0 && (
-                      <div className="absolute z-10 w-full mt-1 bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded-lg shadow-lg">
+                      <div 
+                        ref={dropdownRef}
+                        className="absolute z-50 w-full mt-1 bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded-lg shadow-lg">
                         {journalSuggestions.map((journal, index) => (
                           <button
                             key={index}
@@ -323,10 +331,16 @@ const SearchModal: React.FC<SearchModalProps> = ({ isOpen, onClose }) => {
                         min="1900"
                         max={new Date().getFullYear()}
                         placeholder="2024"
-                        className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg 
+                        className={`w-full px-3 py-2 border rounded-lg 
                                  bg-white dark:bg-gray-800 text-gray-900 dark:text-white
-                                 focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                                 focus:ring-2 focus:ring-blue-500 focus:border-transparent
+                                 ${errors.yearTo ? 'border-red-500 dark:border-red-400' : 'border-gray-300 dark:border-gray-600'}`}
                       />
+                      {errors.yearTo && (
+                        <p className="mt-1 text-sm text-red-600 dark:text-red-400">
+                          {errors.yearTo.message}
+                        </p>
+                      )}
                     </div>
                   </div>
 
@@ -515,7 +529,7 @@ const SearchModal: React.FC<SearchModalProps> = ({ isOpen, onClose }) => {
                     
                     {paper.authors && paper.authors.length > 0 && (
                       <p className="text-sm text-gray-600 dark:text-gray-400">
-                        {paper.authors.slice(0, 3).map((a: any) => a.name).join(', ')}
+                        {paper.authors.slice(0, 3).map((a: Author) => a.name).join(', ')}
                         {paper.authors.length > 3 && ' et al.'}
                       </p>
                     )}

@@ -4,6 +4,7 @@ Supports environment variables and .env file configuration.
 """
 
 import os
+import json
 from typing import Optional
 from pydantic import Field, validator
 from pydantic_settings import BaseSettings
@@ -75,10 +76,16 @@ class Settings(BaseSettings):
     
     @validator("trusted_hosts", pre=True)
     def assemble_trusted_hosts(cls, v):
-        if isinstance(v, str) and not v.startswith("["):
+        if isinstance(v, str) and v.startswith("["):
+            parsed = json.loads(v)
+            if not isinstance(parsed, list):
+                raise ValueError("JSON string must parse to a list")
+            # Ensure all items are strings
+            return [str(item) for item in parsed]
+        elif isinstance(v, str) and not v.startswith("["):
             return [i.strip() for i in v.split(",")]
-        elif isinstance(v, (list, str)):
-            return v
+        elif isinstance(v, list):
+            return [str(item) for item in v]
         raise ValueError(v)
     
     @validator("environment")

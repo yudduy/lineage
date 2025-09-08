@@ -1,7 +1,7 @@
 {
-  "name": "citation-network-explorer-frontend",
+  "name": "lineage-frontend",
   "version": "1.0.0",
-  "description": "Modern React TypeScript frontend for the Citation Network Explorer (Intellectual Lineage Tracer)",
+  "description": "Modern React TypeScript frontend for Lineage - an intellectual lineage tracer",
   "type": "module",
   "scripts": {
     "dev": "vite",

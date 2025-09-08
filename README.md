@@ -1,4 +1,4 @@
-# Citation Network Explorer
+# Lineage
 
 [![MIT License](https://img.shields.io/badge/License-MIT-blue.svg)](https://opensource.org/licenses/MIT)
 [![Python](https://img.shields.io/badge/Python-3.11+-green.svg)](https://python.org)
@@ -6,7 +6,7 @@
 [![TypeScript](https://img.shields.io/badge/TypeScript-5+-blue.svg)](https://typescriptlang.org)
 [![Neo4j](https://img.shields.io/badge/Neo4j-5+-green.svg)](https://neo4j.com)
 
-A straightforward tool for exploring academic citation networks. Built with FastAPI and React, designed to be easily forked and customized for your research needs.
+An intellectual lineage tracer for academic research. Built with FastAPI and React, designed to be easily forked and customized for your research needs.
 
 ## What's included
 
@@ -42,10 +42,10 @@ This is a standard web app with API backend and React frontend.
 **Cache**: Redis for faster API responses  
 
 ### API Endpoints
-- `/api/v1/health/` - Check if everything's running
-- `/api/v1/papers/` - Create, read, update papers
-- `/api/v1/search/` - Search for papers  
-- `/api/v1/openalex/` - Build networks from OpenAlex data
+- `GET /api/v1/health/` - Check if everything's running
+- `GET|POST /api/v1/papers/` - Create, read, update papers
+- `POST /api/v1/search/papers` - Search for papers
+- `POST /api/v1/openalex/network/build-sync` - Build networks from OpenAlex data
 
 ## Getting Started
 
@@ -57,8 +57,8 @@ This is a standard web app with API backend and React frontend.
 
 ### 1. Clone the repo
 ```bash
-git clone https://github.com/your-org/citation-network-explorer.git
-cd citation-network-explorer
+git clone https://github.com/yudduy/lineage.git
+cd lineage
 ```
 
 ### 2. Choose your setup method
@@ -124,7 +124,9 @@ If you want to build your own frontend or integrate with other tools:
 
 ```bash
 # Search for papers
-curl "http://localhost:8000/api/v1/search/papers?q=machine+learning"
+curl -X POST "http://localhost:8000/api/v1/search/papers" \
+  -H "Content-Type: application/json" \
+  -d '{"q":"machine learning"}'
 
 # Get a paper by DOI
 curl "http://localhost:8000/api/v1/papers/doi/10.1000/example.doi"
@@ -162,7 +164,7 @@ The interactive docs are at http://localhost:8000/docs when running.
 Main endpoints:
 - `GET /api/v1/health/` - Check system status
 - `GET /api/v1/papers/doi/{doi}` - Get paper details  
-- `POST /api/v1/search/papers` - Search papers
+- `POST /api/v1/search/papers` - Search papers (JSON body: {"q": "<query>"})
 - `POST /api/v1/openalex/network/build-sync` - Build citation networks
 
 ## 🧪 Development
