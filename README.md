@@ -6,7 +6,7 @@
 [![TypeScript](https://img.shields.io/badge/TypeScript-5+-blue.svg)](https://typescriptlang.org)
 [![Neo4j](https://img.shields.io/badge/Neo4j-5+-green.svg)](https://neo4j.com)
 
-An intellectual lineage tracer for academic research. Built with FastAPI and React, designed to be easily forked and customized for your research needs.
+An intellectual lineage tracer for academic research. Built with FastAPI and React, designed to be easily forked and customized for any research needs.
 
 ## What's included
 
